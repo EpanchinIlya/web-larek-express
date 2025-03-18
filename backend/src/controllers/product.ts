@@ -1,7 +1,9 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import {
   celebrate, Joi, Segments,
 } from 'celebrate';
+import ConflictError from '../errors/conflict-error';
+import DefaultError from '../errors/default-error';
 import Product from '../models/product';
 
 // export interface IProduct{
@@ -31,37 +33,30 @@ export const productRouteValidator = celebrate({
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getProducts = async (req: Request, res: Response) => {
+export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const products = await Product.find({});
-    res.send({ items: products, total: products.length });
+    return res.send({ items: products, total: products.length });
   } catch (error) {
-    res.status(500).send({ message: 'Произошла ошибка' });
+    if (error instanceof Error) {
+      return next(new DefaultError(error.message));
+    }
+    return next(new DefaultError('Неизвестная ошибка'));
   }
 };
 
-export const createProduct = async (req: Request, res: Response) => {
+export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // const {
-    //   title, image, category, description, price,
-    // } = req.body;
-
     const product = await Product.create(req.body);
-
     return res.status(200).send({ data: product });
   } catch (error) {
     if (error instanceof Error) {
-      if (typeof error === 'object' && error !== null && 'code' in error) {
-        const mongoError = error as { code: number; message: string };
-
-        if (mongoError.code === 11000) {
-          console.log('Ошибка: дубликат ключа', mongoError.message);
-          return res.status(409).send({ message: mongoError.message });
-        }
+      if (error.message.includes('E11000')) {
+        return next(new ConflictError(error.message));
       }
-
-      return res.status(400).send({ message: error.message });
+      return next(new DefaultError(error.message));
     }
-    return res.status(500).send({ message: 'Произошла неизвестная ошибка' });
+
+    return next(new DefaultError('Неизвестная ошибка'));
   }
 };

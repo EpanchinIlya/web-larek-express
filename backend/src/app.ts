@@ -4,8 +4,10 @@ import cors from 'cors';
 import express from 'express';
 import { errors } from 'celebrate';
 import mongoose from 'mongoose';
-import productRouter from './routes/product';
+
 import orderRouter from './routes/order';
+import productRouter from './routes/product';
+import errorHandler from './errors/all-errors';
 
 const { PORT } = process.env;
 
@@ -15,10 +17,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
-
 app.use('/product', productRouter);
 app.use('/order', orderRouter);
 app.use(errors());
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
