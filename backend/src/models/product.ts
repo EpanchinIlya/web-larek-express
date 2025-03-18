@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-interface IProduct{
+export interface IProduct{
   title: string;
   image: {
     fileName: string;
@@ -14,18 +14,24 @@ interface IProduct{
 const productSchema = new Schema<IProduct>({
   title: {
     type: String,
-    required: true,
+    required: [true, 'Название продукта обязательно'],
     unique: true,
-    minlength: 2,
-    maxlength: 30,
+    minlength: [2, 'Название должно содержать минимум 2 символа'],
+    maxlength: [30, 'Название должно содержать максимум 30 символов'],
   },
   image: {
-    fileName: { type: String, required: true },
-    originalName: { type: String, required: true },
+    fileName: {
+      type: String,
+      required: [true, 'Имя файла изображения обязательно'],
+    },
+    originalName: {
+      type: String,
+      required: [true, 'Оригинальное имя файла обязательно'],
+    },
   },
   category: {
     type: String,
-    required: true,
+    required: [true, 'Категория продукта обязательна'],
   },
   description: {
     type: String,
@@ -34,6 +40,7 @@ const productSchema = new Schema<IProduct>({
   price: {
     type: Number,
     default: null,
+    min: [0, 'Цена не может быть отрицательной'],
   },
 });
 
