@@ -1,32 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { faker } from '@faker-js/faker';
-import {
-  celebrate, Joi, Segments,
-} from 'celebrate';
 import { Types } from 'mongoose';
 import BadRequestError from '../errors/bad-request-error';
 import DefaultError from '../errors/default-error';
 import Product, { IProduct } from '../models/product';
 
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const phoneRegex = /^\+7\d{10}$/;
-
-const orderSchema = Joi.object({
-  payment: Joi.string().valid('card', 'online').required(),
-  email: Joi.string().pattern(emailRegex).required(),
-  phone: Joi.string().pattern(phoneRegex).required(),
-  address: Joi.string().required(),
-  total: Joi.number().min(0).required(),
-  items: Joi.array().items(
-    Joi.string().required(),
-  ).min(1).required(),
-});
-
-export const orderRouteValidator = celebrate({
-  [Segments.BODY]: orderSchema,
-});
-
-export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
+export default async (req: Request, res: Response, next: NextFunction) => {
   try {
     const products = await Product.find({});
 
@@ -58,9 +37,6 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
     // проверка, сумма заказа совпадает с суммой цен товаров
     const totalPrice = fullItems.reduce((sum: number, item) => sum + (item.price ?? 0), 0);
     if (totalPrice !== total) return next(new BadRequestError('Неверная сумма заказа'));
-
-    // const productIds = products.map((product) => product._id.toString()); // Преобразуем в строки
-    // const allItemsExist = items.every((id) => productIds.includes(id));
 
     const uuid = faker.string.uuid();
 

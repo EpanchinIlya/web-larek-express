@@ -42,6 +42,6 @@ const productSchema = new Schema<IProduct>({
     default: null,
     min: [0, 'Цена не может быть отрицательной'],
   },
-});
+}, { versionKey: false });
 
 export default model<IProduct>('Product', productSchema);
