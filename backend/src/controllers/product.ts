@@ -19,7 +19,7 @@ export const getProducts = async (req: Request, res: Response, next: NextFunctio
 export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const product = await Product.create(req.body);
-    return res.status(200).send(product);
+    return res.status(201).send(product);
   } catch (error) {
     if (error instanceof Error) {
       if (error.message.includes('E11000')) {

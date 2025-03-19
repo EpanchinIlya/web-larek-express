@@ -39,7 +39,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
 
     const uuid = faker.string.uuid();
 
-    return res.send({ id: uuid, total });
+    return res.status(201).send({ id: uuid, total });
   } catch (error) {
     if (error instanceof Error) {
       return next(new DefaultError(error.message));
