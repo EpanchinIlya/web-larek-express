@@ -10,9 +10,8 @@ import orderRouter from './routes/order';
 import productRouter from './routes/product';
 import errorHandler from './errors/all-errors';
 
-const { PORT } = process.env;
-
-mongoose.connect('mongodb://127.0.0.1:27017/weblarek');
+const { PORT = 3000, DB_ADDRESS = 'mongodb://127.0.0.1:27017/weblarek' } = process.env;
+mongoose.connect(DB_ADDRESS);
 
 const app = express();
 app.use(cors());
