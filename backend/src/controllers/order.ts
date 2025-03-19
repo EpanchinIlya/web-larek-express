@@ -38,7 +38,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     if (totalPrice !== total) return next(new BadRequestError('Неверная сумма заказа'));
 
     const uuid = faker.string.uuid();
-    return res.status(201).send({ id: uuid, total });
+    return res.status(200).send({ id: uuid, total });
   } catch (error) {
     if (error instanceof Error) {
       return next(new DefaultError(error.message));
