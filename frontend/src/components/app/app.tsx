@@ -44,7 +44,10 @@ const RouteComponent = () => {
 	const handleModalClose = (path: To | number)  => () => navigate(path as To);
 
 	useEffect(() => {
+		console.log("Запрос");
 		getProducts();
+		console.log("Ответ");
+	
 	}, [getProducts]);
 
 	const locationState = location.state as { background?: Location };

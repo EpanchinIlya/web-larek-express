@@ -17,13 +17,16 @@ export const productsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getProducts.pending, (state) => {
+        console.log("data rx start");
         state.status = RequestStatus.Loading;
       })
       .addCase(getProducts.fulfilled, (state, { payload }:PayloadAction<IProduct[]>) => {
         state.data = payload;
+        console.log("data rx");
         state.status = RequestStatus.Success;
       })
       .addCase(getProducts.rejected, (state) => {
+        console.log("data rx error");
         state.status = RequestStatus.Failed;
       });
   },
