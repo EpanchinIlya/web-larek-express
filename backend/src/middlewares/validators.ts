@@ -3,12 +3,11 @@ import {
 } from 'celebrate';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const phoneRegex = /^\+7\d{10}$/;
 
 const orderSchema = Joi.object({
   payment: Joi.string().valid('card', 'online').required(),
   email: Joi.string().pattern(emailRegex).required(),
-  phone: Joi.string().pattern(phoneRegex).required(),
+  phone: Joi.string().required(),
   address: Joi.string().required(),
   total: Joi.number().min(0).required(),
   items: Joi.array().items(

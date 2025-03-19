@@ -8,7 +8,6 @@ import Product, { IProduct } from '../models/product';
 export default async (req: Request, res: Response, next: NextFunction) => {
   try {
     const products = await Product.find({});
-
     const {
       _payment, _email, _phone, total, _address, items,
     } = req.body;
