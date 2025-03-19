@@ -19,7 +19,6 @@ export const getProducts = async (req: Request, res: Response, next: NextFunctio
 export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const product = await Product.create(req.body);
-    console.log(req.body);
     return res.status(200).send(product);
   } catch (error) {
     if (error instanceof Error) {
