@@ -15,12 +15,20 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       return next(new BadRequestError('Нет товаров в заказе'));
     }
 
+    const invalidItems = items.filter((id:string) => id.length !== 24);
+
+    if (invalidItems.length !== 0) {
+      return next(new BadRequestError(`id товаров: ${invalidItems.join(', ')} некорректны`));
+    }
+
     // запрос полных продуктов по id
     const foundProducts = await Product.find({ _id: { $in: items } });
+    console.log(foundProducts);
+
     const foundIds = foundProducts.map((product) => product._id.toString());
 
     // проверка, что все  продукты есть в магазине
-    if (foundProducts.length !== foundIds.length) {
+    if (foundProducts.length !== items.length) {
       const missingIds = items.filter((id:string) => !foundIds.includes(id)).join(', ');
       return next(new BadRequestError(`Товары с id: ${missingIds} не найдены`));
     }
