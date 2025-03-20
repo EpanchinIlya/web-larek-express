@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 
 export default function MainPage() {
 	const products = useSelector(productsSelector.selectProducts);
+	console.log("Получил данные");
+	console.log(products);
 	return (
 		<Grid<IProduct> data={products}>
 			{({ extraClass, data }) => <Card extraClass={extraClass} key={data._id} dataCard={data} component={Link} />}

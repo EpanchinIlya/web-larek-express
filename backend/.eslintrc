@@ -20,6 +20,9 @@
   },
   "rules": {
     "no-shadow": "off",
+    "no-console": "off",
+    // "no-debugger": "off",
+    "linebreak-style": "off",
     "@typescript-eslint/no-shadow": "warn",
     "import/extensions": [
       "error",
